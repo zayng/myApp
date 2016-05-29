@@ -124,5 +124,5 @@ def user_name(name):
 
 
 if __name__ == "__main__":
-    manage.run()
-    # app.run(debug=True)
+    # manage.run()
+    app.run(debug=True)
