@@ -5,11 +5,11 @@
 
 {% block page_content %}
 <div class="page-header">
-    <h1>Hello,
+    <h1>欢迎您,
     {% if current_user.is_authenticated %}
         {{ current_user.username }}
     {% else %}
-        Stranger
+        陌生人
     {% endif %}
     </h1>
     {% if not known %}
@@ -18,10 +18,10 @@
     <p>Happy to see you again!</p>
     {% endif %}
 </div>
-{{ wtf.quick_form(form) }}
+<p>现在本地日期和时间是 <strong>{{ moment(current_time).format('LLL') }}</strong>.</p>
+<p>那是 <strong>{{ moment(current_time).fromNow(refresh=True) }}</strong>.</p>
 {% endblock %}
-<p>The local data and time is {{ moment(current_time).format('LLL') }}.</p>
-<p>That was  {{ moment(current_time).fromNow(refresh=True) }}.</p>
+
 
 
 

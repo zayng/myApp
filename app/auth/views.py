@@ -9,7 +9,7 @@ from flask.ext.login import login_user, logout_user, login_required
 from . import auth
 from ..models import User
 from .. import db
-from .forms import LoginForm, RegistrationForm
+from .forms import LoginForm, LoginUsernameForm, ChangePasswordForm, RegistrationForm
 from ..email import send_mail
 from flask.ext.login import current_user
 
@@ -24,6 +24,18 @@ def login():
             return redirect(request.args.get('next') or url_for('main.index'))
         flash('Invalid username or password.')
     return render_template('auth/login.html', form=form)
+
+
+@auth.route('/login-user', methods=['GET', 'POST'])
+def user_login():
+    form = LoginUsernameForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is not None and user.verify_password(form.password.data):
+            login_user(user, form.remember_me.data)
+            return redirect(request.args.get('next') or url_for('main.index'))
+        flash('无效的用户名和密码.')
+    return render_template('auth/login-user.html', form=form)
 
 
 @auth.route('/logout')
@@ -88,3 +100,16 @@ def resend_confirmation():
     flash('A new confirmation email has been sent to you email.')
     return redirect(url_for('main.index'))
 
+
+@auth.route('/changepwd', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    form = ChangePasswordForm()
+    if form.validate_on_submit():
+        if current_user.verify_password(form.password.data):
+            user = User.query.filter_by(username=current_user.username).first()
+            user.password = form.new_password.data
+            db.session.add(user)
+            flash('新密码修改成功.')
+            return redirect(url_for('auth.login'))
+    return render_template('auth/changepwd.html', form=form)
