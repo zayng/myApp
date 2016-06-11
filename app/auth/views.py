@@ -9,7 +9,7 @@ from flask.ext.login import login_user, logout_user, login_required
 from . import auth
 from ..models import User
 from .. import db
-from .forms import LoginForm, LoginUsernameForm, ChangePasswordForm, RegistrationForm
+from .forms import LoginForm, LoginUsernameForm, ChangePasswordForm, ResetPasswordForm, RegistrationForm
 from ..email import send_mail
 from flask.ext.login import current_user
 
@@ -27,7 +27,7 @@ def login():
 
 
 @auth.route('/login-user', methods=['GET', 'POST'])
-def user_login():
+def login_username():
     form = LoginUsernameForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
@@ -35,7 +35,7 @@ def user_login():
             login_user(user, form.remember_me.data)
             return redirect(request.args.get('next') or url_for('main.index'))
         flash('无效的用户名和密码.')
-    return render_template('auth/login-user.html', form=form)
+    return render_template('auth/login_user.html', form=form)
 
 
 @auth.route('/logout')
@@ -101,15 +101,21 @@ def resend_confirmation():
     return redirect(url_for('main.index'))
 
 
-@auth.route('/changepwd', methods=['GET', 'POST'])
+@auth.route('/change-passwd', methods=['GET', 'POST'])
 @login_required
 def change_password():
     form = ChangePasswordForm()
     if form.validate_on_submit():
         if current_user.verify_password(form.password.data):
-            user = User.query.filter_by(username=current_user.username).first()
-            user.password = form.new_password.data
-            db.session.add(user)
-            flash('新密码修改成功.')
-            return redirect(url_for('auth.login'))
-    return render_template('auth/changepwd.html', form=form)
+            current_user.password = form.new_password.data
+            db.session.add(current_user)
+            flash('密码已更新成功.')
+            return redirect(url_for('.login_username'))
+        else:
+            flash('无效密码,请重新输入.')
+    return render_template('auth/change_passwd.html', form=form)
+
+
+@auth.route('/reset-password', methods=['GET', 'POST'])
+def reset_password():
+    pass
