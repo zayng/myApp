@@ -65,7 +65,5 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         return True
 
-
-
     def __repr__(self):
         return '<User %r>' % self.username
