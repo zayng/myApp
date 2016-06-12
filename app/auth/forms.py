@@ -53,7 +53,7 @@ class ChangePasswordForm(Form):
     submit = SubmitField('提交')
 
 
-class ResetEmailForm(Form):
+class GetEmailForm(Form):
     email = StringField('Email', validators=[DataRequired(), Length(1, 64), Email()])
     submit = SubmitField('提交')
 
