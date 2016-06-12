@@ -101,7 +101,7 @@ def resend_confirmation():
     return redirect(url_for('main.index'))
 
 
-@auth.route('/change-passwd', methods=['GET', 'POST'])
+@auth.route('/change-password', methods=['GET', 'POST'])
 @login_required
 def change_password():
     form = ChangePasswordForm()
@@ -113,27 +113,22 @@ def change_password():
             return redirect(url_for('.login_username'))
         else:
             flash('无效密码,请重新输入.')
-    return render_template('auth/change_passwd.html', form=form)
+    return render_template('auth/change_password.html', form=form)
 
 
-@auth.route('/reset-password/<token>')
-def reset_confirm(token):
+@auth.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
     if current_user.confirm(token):
-        return redirect(url_for('.reset_password'))
+        form = ResetPasswordForm()
+        if form.validate_on_submit():
+            current_user.password = form.new_password.data
+            db.session.add(current_user)
+            flash('密码已重新设置.')
+            return redirect(url_for('.login'))
+        return render_template('/auth/reset_password.html', form=form)
     else:
-        flash('The confirmation link is invalid or has expired.')
+        flash('修改密码的链接无效或是已过期..')
     return redirect(url_for('.gets_email'))
-
-
-@auth.route('/reset-password', methods=['GET', 'POST'])
-def reset_password():
-    form = ResetPasswordForm()
-    if form.validate_on_submit():
-        pass
-    return render_template('reset_password', form=form)
-
-
-
 
 
 @auth.route('/gets-email', methods=['GET', 'POST'])
@@ -146,8 +141,8 @@ def get_email():
             token = user.generate_confirmation_token()
             # send_mail(user.email, 'Reset your password ',
             #           'auth/email/forgot_password', user=user, token=token)
-            flash('一封重置密码的邮件已发送到您的邮箱.')
-            return render_template('/auth/gets_token.html', token=token)
+            flash('一个包含令牌的链接地址已生成.')
+            return render_template('/auth/gets_token.html', token=token, user=current_user)
         else:
             flash('输入的邮箱地址未注册.')
     return render_template('/auth/gets_email.html', form=form)
