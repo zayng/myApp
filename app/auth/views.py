@@ -142,8 +142,7 @@ def get_email():
             # send_mail(user.email, 'Reset your password ',
             #           'auth/email/forgot_password', user=user, token=token)
             flash('一个包含令牌的链接地址已生成.')
-            return render_template('/auth/gets_token.html', token=token, user=current_user)
+            return render_template('/auth/gets_token.html', token=token, user=user)
         else:
             flash('输入的邮箱地址未注册.')
     return render_template('/auth/gets_email.html', form=form)
-
