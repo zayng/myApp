@@ -53,12 +53,13 @@ class ChangePasswordForm(Form):
     submit = SubmitField('提交')
 
 
-class GetEmailForm(Form):
+class ResetEmailRequestForm(Form):
     email = StringField('Email', validators=[DataRequired(), Length(1, 64), Email()])
     submit = SubmitField('提交')
 
 
 class ResetPasswordForm(Form):
+    email = StringField('Email', validators=[DataRequired(), Length(1, 64), Email()])
     new_password = PasswordField('新密码', validators=[DataRequired(), EqualTo('new_password2', '新密码必须匹配.')])
     new_password2 = PasswordField('确认新密码', validators=[DataRequired()])
     submit = SubmitField('提交')

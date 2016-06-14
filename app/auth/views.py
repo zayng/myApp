@@ -9,7 +9,8 @@ from flask.ext.login import login_user, logout_user, login_required
 from . import auth
 from ..models import User
 from .. import db
-from .forms import LoginForm, LoginUsernameForm, ChangePasswordForm, GetEmailForm, ResetPasswordForm, RegistrationForm
+from .forms import (LoginForm, LoginUsernameForm, ChangePasswordForm,
+                    ResetEmailRequestForm, ResetPasswordForm, RegistrationForm)
 from ..email import send_mail
 from flask.ext.login import current_user
 
@@ -116,33 +117,37 @@ def change_password():
     return render_template('auth/change_password.html', form=form)
 
 
-@auth.route('/reset-password/<token>', methods=['GET', 'POST'])
-def reset_password(token):
-    if current_user.confirm(token):
-        form = ResetPasswordForm()
-        if form.validate_on_submit():
-            current_user.password = form.new_password.data
-            db.session.add(current_user)
-            flash('密码已重新设置.')
-            return redirect(url_for('.login'))
-        return render_template('/auth/reset_password.html', form=form)
-    else:
-        flash('修改密码的链接无效或是已过期..')
-    return redirect(url_for('.gets_email'))
-
-
-@auth.route('/gets-email', methods=['GET', 'POST'])
-def get_email():
-    form = GetEmailForm()
+@auth.route('/reset', methods=['GET', 'POST'])
+def reset_email_request():
+    if not current_user.is_anonymous:
+        return redirect(url_for('main.index'))
+    form = ResetEmailRequestForm()
     if form.validate_on_submit():
-        email = form.email.data
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(email=form.email.data).first()
         if user is not None:
             token = user.generate_confirmation_token()
-            # send_mail(user.email, 'Reset your password ',
-            #           'auth/email/forgot_password', user=user, token=token)
             flash('一个包含令牌的链接地址已生成.')
             return render_template('/auth/gets_token.html', token=token, user=user)
         else:
             flash('输入的邮箱地址未注册.')
-    return render_template('/auth/gets_email.html', form=form)
+    return render_template('/auth/reset_email.html', form=form)
+
+
+@auth.route('/reset/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    if not current_user.is_anonymous:
+        return redirect(url_for('main.index'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user is None:
+            flash('您输入的邮箱地址未找到.')
+            return redirect(url_for('main.index'))
+        if user.reset_password_confirm(token, form.new_password.data):
+            flash('您的密码已更新.')
+            return redirect(url_for('.login'))
+        else:
+            flash('这个重置密码的链接无效或已过期，请重新找回密码.')
+            return redirect(url_for('main.index'))
+    return render_template('/auth/reset_password.html', form=form)
+
