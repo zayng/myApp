@@ -125,7 +125,7 @@ def reset_email_request():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None:
-            token = user.generate_confirmation_token()
+            token = user.generate_reset_password_token()
             flash('一个包含令牌的链接地址已生成.')
             return render_template('/auth/gets_token.html', token=token, user=user)
         else:
