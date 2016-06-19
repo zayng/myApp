@@ -12,14 +12,9 @@
         陌生人
     {% endif %}
     </h1>
-    {% if not known %}
-    <p>Pleased to meet you!</p>
-    {% else %}
-    <p>Happy to see you again!</p>
-    {% endif %}
 </div>
 <p>现在本地日期和时间是 <strong>{{ moment(current_time).format('LLL') }}</strong>.</p>
-<p>那是 <strong>{{ moment(current_time).fromNow(refresh=True) }}</strong>.</p>
+<p>距离首次访问该页面时间： <strong>{{ moment(current_time).fromNow(refresh=True) }}</strong>.</p>
 {% endblock %}
 
 
