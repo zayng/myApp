@@ -67,10 +67,14 @@ def register():
         db.session.add(user)
         db.session.commit()
         token = user.generate_confirmation_token()
+        """
         send_mail(user.email, 'Confirm Your Account',
                   'auth/email/confirm', user=user, token=token)
         flash('A confirmation email has been sent to you by email.')
         return redirect(url_for('auth.login'))
+        """
+        flash('一个包含令牌的链接地址已生成.')
+        return render_template('/auth/gets_token.html', token=token, user=user)
     return render_template('auth/register.html', form=form)
 
 
@@ -93,6 +97,7 @@ def unconfirmed():
     return render_template('/auth/unconfirmed.html')
 
 
+"""取消件发送操作,采用生成链接页面代替
 @auth.route('/confirm')
 @login_required
 def resend_confirmation():
@@ -101,6 +106,15 @@ def resend_confirmation():
               'auth/email/confirm', user=current_user, token=token)
     flash('A new confirmation email has been sent to you email.')
     return redirect(url_for('main.index'))
+"""
+
+
+@auth.route('/confirm')
+@login_required
+def resend_confirmation():
+    token = current_user.generate_confirmation_token()
+    flash('一个包含令牌的链接地址已生成.')
+    return render_template('/auth/gets_token.html', token=token, user=current_user)
 
 
 @auth.route('/change-password', methods=['GET', 'POST'])
