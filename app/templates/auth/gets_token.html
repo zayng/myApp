@@ -3,13 +3,13 @@
 
 {% block page_content %}
 <div class="page-header">
-    <h1>生成token地址</h1>
+    <h1>token链接地址</h1>
 <br>
 <p>Dear {{ user.username }},</p>
 <p>Dear {{ user.email }},</p>
-<p>生成测试token地址：<a href="{{ url_for('auth.reset_password', token=token, _external=True) }}">click here</a>.</p>
+<p>已生成测试token地址：<a href="{{ url_for(endpoint=endpoint, token=token, _external=True) }}">click here</a>.</p>
 <p>或者，您可以在您的浏览器的地址栏中粘贴下面的链接：</p>
-<p>{{ url_for('auth.reset_password', token=token, _external=True) }}</p>
+<p>{{ url_for(endpoint=endpoint, token=token, _external=True) }}</p>
 </div>
 
 {% endblock %}

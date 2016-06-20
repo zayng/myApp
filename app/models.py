@@ -5,6 +5,9 @@ Created on 2016/6/1
 @author: wb-zy184129
 """
 from datetime import datetime
+import hashlib
+
+from flask import request
 from . import db
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
@@ -65,6 +68,7 @@ class User(UserMixin, db.Model):
     about_me = db.Column(db.TEXT())
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
+    avatar_hash = db.Column(db.String(32))
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -74,6 +78,9 @@ class User(UserMixin, db.Model):
                 self.role = Role.query.filter_by(permissions=0xff).first()
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
+            # 生成email地址的hash,en.gravatar.com头像生成服务
+            if self.email is not None and self.avatar_hash is None:
+                self.avatar_hash = hashlib.md5(self.email.encode('utf-8')).hexdigest()
 
     @property
     def password(self):
@@ -121,6 +128,17 @@ class User(UserMixin, db.Model):
         self.password = new_password
         db.session.add(self)
         return True
+
+    # """gravatar请求响应缓慢，注释该头像服务。
+    def gravatar(self, size=100, default='identicon', rating='g'):
+        if request.is_secure:
+            url = 'https://secure.gravatar.com/avatar'
+        else:
+            url = 'http://s.gravatar.com/avatar'
+        email_hash = self.avatar_hash or hashlib.md5(self.email.encode('utf-8')).hexdigest()
+        return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
+            url=url, hash=email_hash, size=size, default=default, rating=rating)
+    # """
 
     def __repr__(self):
         return '<User %r>' % self.username

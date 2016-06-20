@@ -74,7 +74,7 @@ def register():
         return redirect(url_for('auth.login'))
         """
         flash('一个包含令牌的链接地址已生成.')
-        return render_template('/auth/gets_token.html', token=token, user=user)
+        return render_template('/auth/gets_token.html', endpoint='.login', token=token, user=user)
     return render_template('auth/register.html', form=form)
 
 
@@ -114,7 +114,7 @@ def resend_confirmation():
 def resend_confirmation():
     token = current_user.generate_confirmation_token()
     flash('一个包含令牌的链接地址已生成.')
-    return render_template('/auth/gets_token.html', token=token, user=current_user)
+    return render_template('/auth/gets_token.html', endpoint='.confirm', token=token, user=current_user)
 
 
 @auth.route('/change-password', methods=['GET', 'POST'])
@@ -142,7 +142,7 @@ def reset_email_request():
         if user is not None:
             token = user.generate_reset_password_token()
             flash('一个包含令牌的链接地址已生成.')
-            return render_template('/auth/gets_token.html', token=token, user=user)
+            return render_template('/auth/gets_token.html', endpoint='.reset_password', token=token, user=user)
         else:
             flash('输入的邮箱地址未注册.')
     return render_template('/auth/reset_email.html', form=form)

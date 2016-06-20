@@ -13,8 +13,8 @@
     {% endif %}
     </h1>
 </div>
-<p>现在本地日期和时间是 <strong>{{ moment(current_time).format('LLL') }}</strong>.</p>
-<p>距离首次访问该页面时间： <strong>{{ moment(current_time).fromNow(refresh=True) }}</strong>.</p>
+<p>本地日期和时间： <strong>{{ moment(current_time).format('LLL') }}</strong>.</p>
+<p>首次访问页面时间： <strong>{{ moment(current_time).fromNow(refresh=True) }}</strong>.</p>
 {% endblock %}
 
 
