@@ -129,7 +129,7 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         return True
 
-    # """gravatar请求响应缓慢，注释该头像服务。
+    # gravatar请求响应缓慢，注释该头像服务。
     def gravatar(self, size=100, default='identicon', rating='g'):
         if request.is_secure:
             url = 'https://secure.gravatar.com/avatar'
@@ -138,7 +138,6 @@ class User(UserMixin, db.Model):
         email_hash = self.avatar_hash or hashlib.md5(self.email.encode('utf-8')).hexdigest()
         return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
             url=url, hash=email_hash, size=size, default=default, rating=rating)
-    # """
 
     def __repr__(self):
         return '<User %r>' % self.username
