@@ -21,6 +21,21 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
+class Post(db.Model):
+    __tablename__ = 'posts'
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+# class Common(db.Model):
+#     __tablename__ = 'common_log'
+#     id = db.Column(db.Integer, primary_key=True)
+#     request_id = db.Column(db.String(32), unique=True)
+#     ext_info = db.Column(db.String(256))
+#     ts = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+
 class Role(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
@@ -169,9 +184,3 @@ class Permission(object):
     ADMINISTER = 0x80
 
 
-class Post(db.Model):
-    __tablename__ = 'posts'
-    id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime, index=True)
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
