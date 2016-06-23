@@ -18,14 +18,14 @@
     {{ wtf.quick_form(form) }}
     {% endif %}
 </div>
-<ul class="post">
+<ul class="posts">
     {% for post in posts %}
     <li class="post">
-        <div class="profile-thumbnail">
+        <div class="post-thumbnail">
             <a href="{{ url_for('.user', username=post.author.username) }}">
-{#                <img class="img-rounded profile-thumbnail"#}
-{#                     src="{{ post.author.gravatar(size=40) }}">#}
-                <img class="img-rounded profile-thumbnail" height="40" width="40" src="{{ url_for('static', filename='avatar.png') }}">
+                <img class="img-rounded profile-thumbnail"
+                     src="{{ post.author.gravatar(size=40) }}">
+{#                <img class="img-rounded profile-thumbnail" height="40" width="40" src="{{ url_for('static', filename='avatar.png') }}">#}
             </a>
         </div>
         <div class="post-content">
