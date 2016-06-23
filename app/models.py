@@ -28,13 +28,6 @@ class Post(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-# class Common(db.Model):
-#     __tablename__ = 'common_log'
-#     id = db.Column(db.Integer, primary_key=True)
-#     request_id = db.Column(db.String(32), unique=True)
-#     ext_info = db.Column(db.String(256))
-#     ts = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-
 
 class Role(db.Model):
     __tablename__ = 'roles'
