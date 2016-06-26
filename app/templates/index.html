@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
+{% import "_marcros.html" as macros %}
 
 {% block title %}Flasky{% endblock %}
 
@@ -19,11 +20,16 @@
     {% endif %}
 </div>
 {% include '_posts.html' %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, '.index') }}
+</div>
 <p>本地日期和时间： <strong>{{ moment(current_time).format('LLL') }}</strong>.</p>
 <p>首次访问页面时间： <strong>{{ moment(current_time).fromNow(refresh=True) }}</strong>.</p>
 {% endblock %}
-
-
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{% endblock %}
 
 
 
