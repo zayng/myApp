@@ -5,7 +5,7 @@ Created on '2016/5/29'
 @author: 'susce'
 """
 from datetime import datetime
-from flask import render_template, request, current_app
+from flask import render_template, request, current_app, abort
 from flask import flash, redirect, url_for
 from flask.ext.login import login_required, current_user
 
@@ -40,6 +40,22 @@ def post(post_id):
     post = Post.query.get_or_404(post_id)
     return render_template('_posts.html', posts=[post])
 
+
+@main.route('/edit/<int:post_id>', methods=['GET', 'POST'])
+@login_required
+def edit(post_id):
+    post = Post.query.get_or_404(post_id)
+    if current_user != post.author and \
+            not current_user.can(Permission.ADMINISTER):
+        abort(403)
+    form = PostForm()
+    if form.validate_on_submit():
+        post.body = form.body.data
+        db.session.add(post)
+        flash('The post has been updated.')
+        return redirect(url_for('.post', post_id=post.id))
+    form.body.data = post.body
+    return render_template('edit-post.html', form=form)
 
 
 @main.route('/user/<username>')
