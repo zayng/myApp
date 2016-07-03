@@ -238,7 +238,7 @@ class User(UserMixin, db.Model):
         return self.followed.filter_by(followed_id=user.id).first() is not None
 
     def is_followed_by(self, user):
-        return self.followed.filter_by(follower_id=user.id).fisrt() is not  None
+        return self.followed.filter_by(follower_id=user.id).fisrt() is not None
 
 
 class AnonymousUser(AnonymousUserMixin):
