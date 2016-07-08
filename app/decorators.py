@@ -11,15 +11,15 @@ from .models import Permission
 
 
 def permission_required(permission):
-    def decortor(f):
+    def decorator(f):
         @wraps(f)
-        def decorted_function(*args, **kwargs):
+        def decorated_function(*args, **kwargs):
             if not current_user.can(permission):
                 abort(403)
             return f(*args, **kwargs)
-        return decorted_function
-    return decortor
+        return decorated_function
+    return decorator
 
 
-def admin_requied(f):
+def admin_required(f):
     return permission_required(Permission.ADMINISTER)(f)
