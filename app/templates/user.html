@@ -3,7 +3,7 @@
 {% block title %}Flasky - {{ user.username }}{% endblock %}
 
 {% block page_content %}
-<div class="page-header">
+<div class="page-header" xmlns="http://www.w3.org/1999/html">
     <img class="img-rounded profile-thumbnail" src="{{ user.gravatar(size=256) }}">
 {#    <img class="img-rounded profile-thumbnail" height="256" width="256"#}
 {#         src="{{ url_for('static', filename='avatar.png') }}">#}
@@ -37,15 +37,15 @@
             Edit Profile [管理员]
         </a>
         {% endif %}
-        <div>
-        <hr />
+        <p>{{ user.posts.count() }} blog posts.</p>
+        <p>
         {% if current_user.can(Permission.FOLLOW) and user != current_user %}
             {% if not current_user.is_following(user) %}
             <a href="{{ url_for('.follow', username=user.username) }}"
-               class="'btn btn-primary">Follow</a>
+               class="btn btn-primary">Follow</a>
             {% else %}
             <a href="{{ url_for('.unfollow', username=user.username) }}"
-               class="btn btn-default">Unfollow</a>
+               class="btn btn-success">Unfollow</a>
             {% endif %}
         {% endif %}
         <a href="{{ url_for('.followers', username=user.username) }}">
@@ -59,9 +59,9 @@
                 user.is_following(current_user) %}
           | <span class="label label-default">Follows you</span>
         {% endif %}
-        </div>
+        </p>
     </div>
+</div>
     <h3>Posts by {{ user.username }}</h3>
     {% include '_posts.html' %}
-</div>
 {% endblock %}

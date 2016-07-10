@@ -121,7 +121,7 @@ def follow(username):
         flash('You are already following this user.')
         return redirect(url_for('.user', username=username))
     current_user.follow(user)
-    flash('You are now following {userame}'.format(username=username))
+    flash('You are now following {username}'.format(username=username))
     return redirect(url_for('.user', username=username))
 
 
@@ -134,7 +134,7 @@ def followers(username):
     page = request.args.get('page', 1, type=int)
     pagination = user.followers.paginate(page, per_page=current_app.config['FLASK_FOLLOWERS_PAGE'], error_out=False)
     follows = [{'user': item.follower, 'timestamp': item.timestamp} for item in pagination.items]
-    return render_template('followers,html', user=user, title="Followers of", endpoint='.followers',
+    return render_template('followers.html', user=user, title="Followers of", endpoint='.followers',
                            pagination=pagination, follows=follows)
 
 

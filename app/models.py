@@ -114,11 +114,15 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     avatar_hash = db.Column(db.String(32))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
+
+    # follower_id表示关注者， followed_id表示被关注者
+    # 查询被关注者，select * from follows  LEFT JOIN users on follower_id = id where follower_id=2
     followed = db.relationship('Follow', foreign_keys=[Follow.follower_id],
                                backref=db.backref('follower', lazy='joined'),
                                lazy='dynamic',
                                cascade='all, delete-orphan')
 
+    # 查询关注者， select * from follows  LEFT JOIN users on followed_id = id where followed_id=3
     followers = db.relationship('Follow', foreign_keys=[Follow.followed_id],
                                backref=db.backref('followed', lazy='joined'),
                                lazy='dynamic',
@@ -238,7 +242,7 @@ class User(UserMixin, db.Model):
         return self.followed.filter_by(followed_id=user.id).first() is not None
 
     def is_followed_by(self, user):
-        return self.followed.filter_by(follower_id=user.id).fisrt() is not None
+        return self.followers.filter_by(follower_id=user.id).fisrt() is not None
 
 
 class AnonymousUser(AnonymousUserMixin):
