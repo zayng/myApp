@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% import "_marcros.html" as macros %}
+
+{% block title %}Flasky - Post{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>{{ title }}</h1>
+</div>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>user</th>
+        <th>since</th>
+    </tr>
+    </thead>
+    {% for followed in followeds %}
+    <tr>
+        <td>
+            <a href="{{ url_for('.user', username = followed.user.username) }}">
+                <img class="img-rounded" src="{{ followed.user.gravatar(size=32) }}">
+                {{ followed.user.username }}
+            </a></td>
+        <td>{{ moment(followed.timestamp).format('L') }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, endpoint, username = user.username) }}
+</div>
+{% endblock %}

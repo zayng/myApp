@@ -140,9 +140,26 @@ def followers(username):
 
 @main.route('/unfollow/<username>')
 def unfollow(username):
-    pass
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        flash('Invalid user.')
+        return redirect(url_for('.index'))
+    if not current_user.is_following(user):
+        flash('你还没有关注该用户.')
+        return redirect(url_for('.user', username=username))
+    current_user.unfollow(user)
+    flash('You unfollow {username}'.format(username=username))
+    return redirect(url_for('.user', username=username))
 
 
 @main.route('/followed/<username>')
 def followed_by(username):
-    pass
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        flash('Invalid user.')
+        return redirect(url_for('.index'))
+    page = request.args.get('page', 1, type=int)
+    pagination = user.followed.paginate(page, per_page=current_app.config['FLASK_FOLLOWERS_PAGE'], error_out=False)
+    followeds = [{'user': item.followed, 'timestamp': item.timestamp} for item in pagination.items]
+    return render_template('followed.html', user=user, title="Followed of", endpoint='.followed',
+                           pagination=pagination, followeds=followeds)
