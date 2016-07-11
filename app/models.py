@@ -53,6 +53,8 @@ class Post(db.Model):
                         'h1', 'h2', 'h3', 'p']
         target.body_html = bleach.linkify(bleach.clean(markdown(value, output_format='html'),
                                                        tags=allowed_tags, strip=True))
+
+
 db.event.listen(Post.body, 'set', Post.on_changed_body)
 
 
@@ -113,20 +115,105 @@ class User(UserMixin, db.Model):
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     avatar_hash = db.Column(db.String(32))
+
+    ''' 查询用户写的文章,SQL:
+    SELECT
+        posts.id AS posts_id,
+        posts.body AS posts_body,
+        posts.body_html AS posts_body_html,
+        posts.timestamp AS posts_timestamp,
+        posts.author_id AS posts_author_id
+    FROM
+        posts
+    WHERE
+        posts.author_id = 2
+    '''
     posts = db.relationship('Post', backref='author', lazy='dynamic')
 
-    # follower_id表示关注者， followed_id表示被关注者
-    # 查询被关注者，select * from follows  LEFT JOIN users on follower_id = id where follower_id=2
+    """follower_id表示关注者， followed_id表示被关注者
+        查询被关注者，select * from follows  LEFT JOIN users on follower_id = id where follower_id=2
+    SELECT
+        follows.follower_id AS follows_follower_id,
+        follows.followed_id AS follows_followed_id,
+        follows.timestamp AS follows_timestamp,
+        users_1.id AS users_1_id,
+        users_1.email AS users_1_email,
+        users_1.username AS users_1_username,
+        users_1.password_hash AS users_1_password_hash,
+        users_1.confirmed AS users_1_confirmed,
+        users_1.role_id AS users_1_role_id,
+        users_1.name AS users_1_name,
+        users_1.location AS users_1_location,
+        users_1.about_me AS users_1_about_me,
+        users_1.member_since AS users_1_member_since,
+        users_1.last_seen AS users_1_last_seen,
+        users_1.avatar_hash AS users_1_avatar_hash,
+        users_2.id AS users_2_id,
+        users_2.email AS users_2_email,
+        users_2.username AS users_2_username,
+        users_2.password_hash AS users_2_password_hash,
+        users_2.confirmed AS users_2_confirmed,
+        users_2.role_id AS users_2_role_id,
+        users_2.name AS users_2_name,
+        users_2.location AS users_2_location,
+        users_2.about_me AS users_2_about_me,
+        users_2.member_since AS users_2_member_since,
+        users_2.last_seen AS users_2_last_seen,
+        users_2.avatar_hash AS users_2_avatar_hash
+    FROM
+        follows
+    LEFT OUTER JOIN users AS users_1 ON users_1.id = follows.follower_id
+    LEFT OUTER JOIN users AS users_2 ON users_2.id = follows.followed_id
+    WHERE
+        follows.follower_id = 2;
+    """
     followed = db.relationship('Follow', foreign_keys=[Follow.follower_id],
                                backref=db.backref('follower', lazy='joined'),
                                lazy='dynamic',
                                cascade='all, delete-orphan')
 
-    # 查询关注者， select * from follows  LEFT JOIN users on followed_id = id where followed_id=3
+    """ 查询关注者， select * from follows  LEFT JOIN users on followed_id = id where followed_id=3
+        users_1：关注者表
+        users_2：被关注者表
+    SELECT
+        follows.follower_id AS follows_follower_id,
+        follows.followed_id AS follows_followed_id,
+        follows.timestamp AS follows_timestamp,
+        users_1.id AS users_1_id,
+        users_1.email AS users_1_email,
+        users_1.username AS users_1_username,
+        users_1.password_hash AS users_1_password_hash,
+        users_1.confirmed AS users_1_confirmed,
+        users_1.role_id AS users_1_role_id,
+        users_1.name AS users_1_name,
+        users_1.location AS users_1_location,
+        users_1.about_me AS users_1_about_me,
+        users_1.member_since AS users_1_member_since,
+        users_1.last_seen AS users_1_last_seen,
+        users_1.avatar_hash AS users_1_avatar_hash,
+        users_2.id AS users_2_id,
+        users_2.email AS users_2_email,
+        users_2.username AS users_2_username,
+        users_2.password_hash AS users_2_password_hash,
+        users_2.confirmed AS users_2_confirmed,
+        users_2.role_id AS users_2_role_id,
+        users_2.name AS users_2_name,
+        users_2.location AS users_2_location,
+        users_2.about_me AS users_2_about_me,
+        users_2.member_since AS users_2_member_since,
+        users_2.last_seen AS users_2_last_seen,
+        users_2.avatar_hash AS users_2_avatar_hash
+    FROM
+        follows
+    LEFT OUTER JOIN users AS users_1 ON users_1.id = follows.follower_id
+    LEFT OUTER JOIN users AS users_2 ON users_2.id = follows.followed_id
+    WHERE
+        follows.followed_id = 7;
+    """
     followers = db.relationship('Follow', foreign_keys=[Follow.followed_id],
-                               backref=db.backref('followed', lazy='joined'),
-                               lazy='dynamic',
-                               cascade='all, delete-orphan')
+                                backref=db.backref('followed', lazy='joined'),
+                                lazy='dynamic',
+                                cascade='all, delete-orphan')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -139,6 +226,8 @@ class User(UserMixin, db.Model):
             # 生成email地址的hash,en.gravatar.com头像生成服务
             if self.email is not None and self.avatar_hash is None:
                 self.avatar_hash = hashlib.md5(self.email.encode('utf-8')).hexdigest()
+            # 添加自己为被关注者
+            self.follow(self)
 
     @property
     def password(self):
@@ -228,21 +317,36 @@ class User(UserMixin, db.Model):
             except IntegrityError:
                 db.session.rollback()
 
+    @staticmethod
+    def add_self_follows():
+        for user in User.query.all():
+            if not user.is_following(user):
+                user.follow(user)
+                db.session.add(user)
+                db.session.commit()
+
     def follow(self, user):
         if not self.is_following(user):
             f = Follow(follower=self, followed=user)
             db.session.add(f)
 
+    # 取消关注
     def unfollow(self, user):
         f = self.followed.filter_by(followed_id=user.id).first()
         if f:
             db.session.delete(f)
 
+    # 是否关注
     def is_following(self, user):
         return self.followed.filter_by(followed_id=user.id).first() is not None
 
+    # 是否被关注
     def is_followed_by(self, user):
         return self.followers.filter_by(follower_id=user.id).fisrt() is not None
+
+    @property
+    def followed_posts(self):
+        return Post.query.join(Follow, Follow.followed_id == Post.author_id).filter(Follow.follower_id == self.id)
 
 
 class AnonymousUser(AnonymousUserMixin):
@@ -262,6 +366,3 @@ class Permission(object):
     WRITE_ARTICLES = 0x04
     MODERATE_COMMENTS = 0x08
     ADMINISTER = 0x80
-
-
-

@@ -23,6 +23,7 @@ class Config(object):
     FLASK_ADMIN = os.environ.get('FLASK_ADMIN')
     FLASK_POSTS_PER_PAGE = 20
     FLASK_FOLLOWERS_PAGE = 20
+    FLASK_USER_PAGE = 10
 
     @staticmethod
     def init_app(app):

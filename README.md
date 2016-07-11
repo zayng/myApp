@@ -147,3 +147,38 @@ prev() 上一页的分页对象
 next() 下一页的分页对象
 
 
+"""
+        添加关注
+   SELECT
+        follows.follower_id AS follows_follower_id,
+        follows.followed_id AS follows_followed_id,
+        follows.timestamp AS follows_timestamp,
+        users_1.id AS users_1_id,
+        users_1.email AS users_1_email,
+        users_1.username AS users_1_username,
+        users_1.password_hash AS users_1_password_hash,
+        users_1.confirmed AS users_1_confirmed,
+        users_1.role_id AS users_1_role_id,
+        users_1.name AS users_1_name,
+        users_1.location AS users_1_location,
+        users_1.about_me AS users_1_about_me,
+        users_1.member_since AS users_1_member_since,
+        users_1.last_seen AS users_1_last_seen,
+        users_1.avatar_hash AS users_1_avatar_hash,
+        users_2.id AS users_2_id,
+        users_2.email AS users_2_email,
+        users_2.username AS users_2_username,
+        users_2.password_hash AS users_2_password_hash,
+        users_2.confirmed AS users_2_confirmed,
+        users_2.role_id AS users_2_role_id,
+        users_2.name AS users_2_name,
+        users_2.location AS users_2_location,
+        users_2.about_me AS users_2_about_me,
+        users_2.member_since AS users_2_member_since,
+        users_2.last_seen AS users_2_last_seen,
+        users_2.avatar_hash AS users_2_avatar_hash
+    FROM
+        follows
+    LEFT OUTER JOIN users AS users_1 ON users_1.id = follows.follower_id
+    LEFT OUTER JOIN users AS users_2 ON users_2.id = follows.followed_id
+"""
