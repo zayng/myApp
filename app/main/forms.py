@@ -57,3 +57,8 @@ class PostForm(Form):
     # body = TextAreaField("what's on your mind?", validators=[DataRequired()])
     body = PageDownField("what's on your mind?", validators=[DataRequired()])
     submit = SubmitField('submit')
+
+
+class CommentForm(Form):
+    body = StringField('', validators=[DataRequired()])
+    submit = SubmitField('Submit')

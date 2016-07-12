@@ -4,15 +4,14 @@ Created on '2016/5/29'
 
 @author: 'susce'
 """
-from datetime import datetime
 from flask import render_template, request, current_app, abort
 from flask import flash, redirect, url_for, make_response
 from flask.ext.login import login_required, current_user
 
 from . import main
-from ..models import User, Role, Post, Permission, Follow
+from ..models import User, Role, Post, Permission, Comment
 from .. import db
-from .forms import EditProfileForm, EditProfileAdminForm, PostForm
+from .forms import EditProfileForm, EditProfileAdminForm, PostForm, CommentForm
 from ..decorators import admin_required, permission_required
 
 
@@ -62,6 +61,19 @@ def show_followed():
 @main.route('/post/<int:post_id>')
 def post(post_id):
     post = Post.query.get_or_404(post_id)
+    form = CommentForm()
+    if form.validate_on_submit():
+        comment = Comment(body=form.body.data,
+                          post=post,
+                          anthor=current_user._get_current_object())
+        db.session.add(comment)
+        flash('You comment has been published.')
+        return redirect(url_for('.post', id=post.id, page=-1))
+    page = request.args.get('page', 1, type=int)
+    if page == -1:
+        page = (post.comments.count() - 1) / \
+            current_user.config['FLASK_COMMENTS_PER_PAGE'] + 1
+
     return render_template('post.html', posts=[post])
 
 
