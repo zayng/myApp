@@ -36,8 +36,8 @@
                     <span class="label label-default">Permalink</span>
                 </a>
                 <a href="{{ url_for('.post', post_id=post.id) }}#comments">
-                    <span class="label label-default">
-                        {{ post.comments.count() }} Conments
+                    <span class="label label-warning">
+                        {{ post.comments.count() }} Comments
                     </span>
                 </a>
             </div>

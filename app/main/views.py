@@ -236,3 +236,14 @@ def moderate_disable(id):
     comment.disabled = True
     db.session.add(comment)
     return redirect(url_for('.moderate', page=request.args.get('page', 1, type=int)))
+
+
+@main.route('/delete-comment/<int:comment_id>')
+@login_required
+def delete_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    post_id = comment.post_id
+    db.session.delete(comment)
+    db.session.commit()
+    flash('该条评论已删除.')
+    return redirect(url_for('.post', post_id=post_id))
