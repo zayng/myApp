@@ -58,23 +58,25 @@ def show_followed():
     return resp
 
 
-@main.route('/post/<int:post_id>')
+@main.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def post(post_id):
     post = Post.query.get_or_404(post_id)
     form = CommentForm()
     if form.validate_on_submit():
         comment = Comment(body=form.body.data,
                           post=post,
-                          anthor=current_user._get_current_object())
+                          author=current_user._get_current_object())
         db.session.add(comment)
         flash('You comment has been published.')
-        return redirect(url_for('.post', id=post.id, page=-1))
+        return redirect(url_for('.post', post_id=post.id))
     page = request.args.get('page', 1, type=int)
-    if page == -1:
-        page = (post.comments.count() - 1) / \
-            current_user.config['FLASK_COMMENTS_PER_PAGE'] + 1
-
-    return render_template('post.html', posts=[post])
+    # if page == -1:
+    #     page = (post.comments.count() - 1) // \
+    #         current_app.config['FLASK_COMMENTS_PER_PAGE'] + 1
+    pagination = post.comments.order_by(Comment.timestamp.desc()).paginate(
+        page, per_page=current_app.config['FLASK_COMMENTS_PER_PAGE'], error_out=False)
+    comments = pagination.items
+    return render_template('post.html', posts=[post], form=form, comments=comments, pagination=pagination)
 
 
 @main.route('/edit/<int:post_id>', methods=['GET', 'POST'])
@@ -202,3 +204,35 @@ def followed_by(username):
     followeds = [{'user': item.followed, 'timestamp': item.timestamp} for item in pagination.items]
     return render_template('followed.html', user=user, title="Followed of", endpoint='.followed_by',
                            pagination=pagination, followeds=followeds)
+
+
+@main.route('/moderate')
+@login_required
+@permission_required(Permission.MODERATE_COMMENTS)
+def moderate():
+    page = request.args.get('page', 1, type=int)
+    pagination = Comment.query.order_by(Comment.timestamp.desc()).paginate(
+        page, per_page=current_app.config['FLASK_COMMENTS_PER_PAGE'], error_out=False)
+
+    comments = pagination.items
+    return render_template('moderate.html', comments=comments, pagination=pagination, page=page)
+
+
+@main.route('/moderate/enable/<int:id>')
+@login_required
+@permission_required(Permission.MODERATE_COMMENTS)
+def moderate_enable(id):
+    comment = Comment.query.get_or_404(id)
+    comment.disabled = False
+    db.session.add(comment)
+    return redirect(url_for('.moderate', page=request.args.get('page', 1, type=int)))
+
+
+@main.route('/moderate/disable/<int:id>')
+@login_required
+@permission_required(Permission.MODERATE_COMMENTS)
+def moderate_disable(id):
+    comment = Comment.query.get_or_404(id)
+    comment.disabled = True
+    db.session.add(comment)
+    return redirect(url_for('.moderate', page=request.args.get('page', 1, type=int)))

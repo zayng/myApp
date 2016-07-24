@@ -60,5 +60,5 @@ class PostForm(Form):
 
 
 class CommentForm(Form):
-    body = StringField('', validators=[DataRequired()])
+    body = TextAreaField('', validators=[DataRequired()])
     submit = SubmitField('Submit')

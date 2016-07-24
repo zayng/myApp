@@ -24,7 +24,7 @@ class Config(object):
     FLASK_POSTS_PER_PAGE = 20
     FLASK_FOLLOWERS_PAGE = 20
     FLASK_USER_PAGE = 10
-    FLASK_COMMENTS_PER_PAGE = 10
+    FLASK_COMMENTS_PER_PAGE = 5
     @staticmethod
     def init_app(app):
         pass

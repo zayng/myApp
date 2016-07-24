@@ -218,7 +218,6 @@ class User(UserMixin, db.Model):
 
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
 
-
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
@@ -388,5 +387,6 @@ class Comment(db.Model):
                         'strong']
         target.body_html = bleach.linkify(bleach.clean(markdown(value, output_format='html'),
                                                        tags=allowed_tags, strip=True))
+
 
 db.event.listen(Comment.body, 'set', Comment.on_changed_body)
