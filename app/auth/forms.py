@@ -28,9 +28,9 @@ class LoginUsernameForm(Form):
 class RegistrationForm(Form):
     email = StringField('邮箱', validators=[DataRequired(), Length(1, 64), Email()])
     username = StringField('用户名', validators=[DataRequired(), Length(1, 64),
-                                                   Regexp('^[A-za-z][A-Za-z0-9_-]*$', 0,
-                                                          'Username must have only letters,'
-                                                          'numbers, dots or underscores')])
+                                                Regexp('^[A-za-z][A-Za-z0-9_-]*$', 0,
+                                                       'Username must have only letters,'
+                                                       'numbers, dots or underscores')])
     password = PasswordField('密码',
                              validators=[DataRequired(), EqualTo('password2', message='Passwords must match.')])
     password2 = PasswordField('确认密码', validators=[DataRequired()])
@@ -38,7 +38,7 @@ class RegistrationForm(Form):
 
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():
-            raise ValidationError('密码已注册.')
+            raise ValidationError('邮箱已注册.')
 
     def validate_username(self, field):
         if User.query.filter_by(username=field.data).first():
