@@ -9,7 +9,7 @@
     {{ wtf.quick_form(form) }}
     <br>
     <p>忘记密码?<a href="{{ url_for('auth.reset_email_request') }}">找回密码</a></p>
-    <p>Use email Sing in?<a href="{{ url_for('auth.login') }}">Click here to email</a></p>
-    <p>New user?<a href="{{ url_for('auth.register') }}">Click here to register</a></p>
+    <p>使用邮箱登录?<a href="{{ url_for('auth.login') }}">使用邮箱登录</a></p>
+    <p>新用户?<a href="{{ url_for('auth.register') }}">Click here to register</a></p>
 </div>
 {% endblock %}

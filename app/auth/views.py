@@ -10,7 +10,7 @@ from . import auth
 from ..models import User
 from .. import db
 from .forms import (LoginForm, LoginUsernameForm, ChangePasswordForm,
-                    ResetEmailRequestForm, ResetPasswordForm, RegistrationForm)
+                    ResetEmailRequestForm, ResetPasswordForm, RegistrationForm, NewRegistrationForm)
 from ..email import send_mail
 from flask.ext.login import current_user
 
@@ -167,3 +167,15 @@ def reset_password(token):
             return redirect(url_for('main.index'))
     return render_template('/auth/reset_password.html', form=form)
 
+
+@auth.route('/new-register', methods=['GET', 'POST'])
+def new_register():
+    form = NewRegistrationForm(request.form)
+    if form.validate_on_submit():
+        user = User(username=form.username.data,
+                    email=form.email.data,
+                    password=form.password.data)
+        db.session.add(user)
+        flash('感谢注册.')
+        return redirect(url_for('.login'))
+    return render_template('/auth/new_register.html', form=form)
