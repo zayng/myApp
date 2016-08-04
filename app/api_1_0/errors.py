@@ -22,7 +22,7 @@ def forbidden(message):
 
 
 def unauthorized(message):
-    response = jsonify({'error': 'unanthorized', 'message': message})
+    response = jsonify({'error': 'unauthorized', 'message': message})
     response.stats_code = 401
     return response
 

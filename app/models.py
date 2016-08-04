@@ -59,12 +59,12 @@ class Post(db.Model):
 
     def to_json(self):
         json_post = {
-            'url': url_for('api.get_post', id=self.id, _external=True),
+            'url': url_for('api.get_post', postid=self.id, _external=True),
             'body': self.body,
             'body_html': self.body_html,
             'timestamp': self.timestamp,
-            'author': "anonymous",
-            'comments': "anonymous",
+            'author': url_for('api.get_user', userid=self.author_id, _external=True),
+            'comments': url_for('api.get_post_comments', postid=self.id, _external=True),
             'comment_count': self.comments.count()
         }
         return json_post
@@ -363,6 +363,7 @@ class User(UserMixin, db.Model):
                 db.session.add(user)
                 db.session.commit()
 
+    # 关注
     def follow(self, user):
         if not self.is_following(user):
             f = Follow(follower=self, followed=user)
@@ -388,12 +389,12 @@ class User(UserMixin, db.Model):
 
     def to_json(self):
         json_user = {
-            'url': url_for('api.get_post', id=self.id, _external=True),
+            'url': url_for('api.get_user', userid=self.id, _external=True),
             'username': self.username,
             'member_since': self.member_since,
             'last_seen': self.last_seen,
-            'posts': "anonymous",
-            'followed_posts': "anonymous-one",
+            'posts': url_for('api.get_user_posts', userid=self.id, _external=True),
+            'followed_posts': url_for('api.get_user_followed_posts', userid=self.id, _external=True),
             'post_count': self.posts.count()
         }
         return json_user
@@ -435,5 +436,21 @@ class Comment(db.Model):
         target.body_html = bleach.linkify(bleach.clean(markdown(value, output_format='html'),
                                                        tags=allowed_tags, strip=True))
 
+    def to_json(self):
+        json_post = {
+            'url': url_for('api.get_comment', commentid=self.id, _external=True),
+            'body': self.body,
+            'body_html': self.body_html,
+            'timestamp': self.timestamp,
+            'author': url_for('api.get_user', userid=self.author_id, _external=True)
+        }
+        return json_post
+
+    @staticmethod
+    def from_json(json_post):
+        body = json_post.get('body')
+        if body is None or body == '':
+            raise ValidationError('comment does not have a body')
+        return Comment(body=body)
 
 db.event.listen(Comment.body, 'set', Comment.on_changed_body)
