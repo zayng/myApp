@@ -7,4 +7,5 @@ Created on 2016/8/9
 
 from flask import Blueprint
 
-myapi = Blueprint('myapi', __name__)
+api_bp = Blueprint('api_bp', __name__)
+
