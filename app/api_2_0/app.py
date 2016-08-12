@@ -4,16 +4,17 @@ Created on 2016/8/9
 
 @author: susce
 """
-from flask import url_for, render_template
-from flask_restful import Resource, Api
-from . import api_bp
 
+# from flask.ext.httpauth import HTTPBasicAuth
+from flask_restful import Api
+from . import api_bp
+from .resources.task import TaskAPI, TaskListAPI
+# from .resources.users import Todo
 
 api = Api(api_bp)
+# auth = HTTPBasicAuth()
 
 
-class TodoItem(Resource):
-    def get(self, id):
-        return {'task': 'Say "Hello, World!"'}
-
-api.add_resource(TodoItem, '/todos/<int:id>')
+# api.add_resource(Todo, '/todo', endpoint='todo_ep')
+api.add_resource(TaskListAPI, '/todo/tasks', endpoint='tasks')
+api.add_resource(TaskAPI, '/todo/tasks/<int:id>', endpoint='task')
