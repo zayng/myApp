@@ -288,6 +288,20 @@ class User(UserMixin, db.Model):
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
         return s.dumps({'reset': self.id})
 
+
+    def generate_auth_token(self, expiration=3600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'id': self.id}).decode('ascii')
+
+    @staticmethod
+    def verify_auth_token(token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return None
+        return User.query.get(data['id'])
+
     def reset_password_confirm(self, token, new_password):
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
@@ -299,6 +313,7 @@ class User(UserMixin, db.Model):
         self.password = new_password
         db.session.add(self)
         return True
+
 
     # gravatar请求响应缓慢，注释该头像服务。
     def gravatar(self, size=100, default='identicon', rating='g'):
@@ -341,19 +356,6 @@ class User(UserMixin, db.Model):
             except IntegrityError:
                 db.session.rollback()
 
-    def generate_auth_token(self, expiration):
-        s = Serializer(current_app.config['SECRET_KEY'],
-                       expires_in=expiration)
-        return s.dumps({'id': self.id}).decode('ascii')
-
-    @staticmethod
-    def verify_auth_token(token):
-        s = Serializer(current_app.config['SECRET_KEY'])
-        try:
-            data = s.loads(token)
-        except:
-            return None
-        return User.query.get(data['id'])
 
     @staticmethod
     def add_self_follows():

@@ -47,12 +47,12 @@ task_fields = {
     'title': fields.String,
     'description': fields.String,
     'done': fields.Boolean,
-    'uri': fields.Url('task')
+    'uri': fields.Url('.task')
 }
 
 
 class TaskListAPI(Resource):
-    decorators = [hp_auth.login_required]
+    # decorators = [hp_auth.login_required]
 
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
@@ -79,7 +79,7 @@ class TaskListAPI(Resource):
 
 
 class TaskAPI(Resource):
-    decorators = [hp_auth.login_required]
+    # decorators = [hp_auth.login_required]
 
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
