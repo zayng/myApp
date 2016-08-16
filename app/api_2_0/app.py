@@ -56,7 +56,6 @@ def get_token():
     return jsonify({'token': token, 'expiration': 3600})
 
 
-
 api.add_resource(TaskListAPI, '/todo/tasks', endpoint='.tasks')
 api.add_resource(TaskAPI, '/todo/tasks/<int:id>', endpoint='.task')
 
