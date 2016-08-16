@@ -40,7 +40,7 @@ def auth_error():
     return unauthorized('Invalid credentials')
 
 
-@api.before_request
+@api_bp.before_request
 @re_auth.login_required
 def before_request():
     if not g.current_user.is_anonymous and \
