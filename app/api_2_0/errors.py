@@ -4,7 +4,7 @@ Created on 2016/8/15
 
 @author: wb-zy184129
 """
-from .app import api
+from .app import api_bp
 from ..exceptions import ValidationError
 from flask import jsonify
 
@@ -27,6 +27,6 @@ def unauthorized(message):
     return response
 
 
-@api.errorhandler(ValidationError)
+@api_bp.errorhandler(ValidationError)
 def validation_error(e):
     return bad_request(e.args[0])

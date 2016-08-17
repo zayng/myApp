@@ -9,8 +9,9 @@ from flask_restful import Api
 from flask_httpauth import HTTPBasicAuth
 from . import api_bp
 from .errors import unauthorized, forbidden
-from ..models import User, AnonymousUser, Post, Comment, Permission
+from ..models import User, AnonymousUser
 from .resources.task import TaskAPI, TaskListAPI
+from .resources.users import UserListApi, UserInfoApi
 
 
 api = Api(api_bp)
@@ -40,12 +41,12 @@ def auth_error():
     return unauthorized('Invalid credentials')
 
 
-@api_bp.before_request
-@re_auth.login_required
-def before_request():
-    if not g.current_user.is_anonymous and \
-            not g.current_user.confirmed:
-        return forbidden('Unconfirmed account')
+# @api_bp.before_request
+# @re_auth.login_required
+# def before_request():
+#     if not g.current_user.is_anonymous and \
+#             not g.current_user.confirmed:
+#         return forbidden('Unconfirmed account')
 
 
 @api_bp.route('/token')
@@ -58,6 +59,8 @@ def get_token():
 
 api.add_resource(TaskListAPI, '/todo/tasks', endpoint='.tasks')
 api.add_resource(TaskAPI, '/todo/tasks/<int:id>', endpoint='.task')
+api.add_resource(UserListApi, '/users/', endpoint='user')
+api.add_resource(UserInfoApi, '/users/<int:userid>', endpoint='get_user')
 
 
 
