@@ -12,9 +12,6 @@ from .errors import forbidden, unauthorized
 from .. import hp_auth
 
 
-# auth = HTTPBasicAuth()
-
-
 @hp_auth.verify_password
 def verify_password(email_or_token, password):
     if email_or_token == '':

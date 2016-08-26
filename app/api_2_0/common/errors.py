@@ -4,8 +4,8 @@ Created on 2016/8/15
 
 @author: wb-zy184129
 """
-from .app import api_bp
-from ..exceptions import ValidationError
+from app.api_2_0.app import api_bp
+from app.exceptions import ValidationError
 from flask import jsonify
 
 

@@ -12,21 +12,21 @@ Flask-RESTful extension."""
 
 from flask import jsonify, abort, make_response
 from flask.ext.restful import Resource, reqparse, fields, marshal
-from ... import hp_auth
+from ..app import hp_auth
 
 
-@hp_auth.get_password
-def get_password(username):
-    if username == 'miguel':
-        return 'python'
-    return None
-
-
-@hp_auth.error_handler
-def unauthorized():
-    # return 403 instead of 401 to prevent browsers from displaying the default
-    # auth dialog
-    return make_response(jsonify({'message': 'Unauthorized access'}), 403)
+# @hp_auth.get_password
+# def get_password(username):
+#     if username == 'miguel':
+#         return 'python'
+#     return None
+#
+#
+# @hp_auth.error_handler
+# def unauthorized():
+#     # return 403 instead of 401 to prevent browsers from displaying the default
+#     # auth dialog
+#     return make_response(jsonify({'message': 'Unauthorized access'}), 403)
 
 tasks = [
     {

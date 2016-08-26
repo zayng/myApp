@@ -403,16 +403,16 @@ class User(UserMixin, db.Model):
 
 
     def to_dict(self):
-        json_user = {
-            'url': url_for('api.get_user', userid=self.id, _external=True),
+        user_dict = {
+            'url': url_for('api_bp.get_user_info', userid=self.id, _external=True),
             'username': self.username,
             'member_since': self.member_since,
             'last_seen': self.last_seen,
-            'posts': url_for('api.get_user_posts', userid=self.id, _external=True),
-            'followed_posts': url_for('api.get_user_followed_posts', userid=self.id, _external=True),
+            # 'posts': url_for('api.get_user_posts', userid=self.id, _external=True),
+            # 'followed_posts': url_for('api.get_user_followed_posts', userid=self.id, _external=True),
             'post_count': self.posts.count()
         }
-        return json_user
+        return user_dict
 
 
 class AnonymousUser(AnonymousUserMixin):
