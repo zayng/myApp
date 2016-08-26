@@ -6,15 +6,11 @@ Created on 2016/8/10
 """
 
 from flask_restful import fields, marshal_with, reqparse, Resource, url_for, current_app
-from flask_restful import fields, marshal_with, reqparse, Resource, current_app
 from ...models import User
 
 
 user_list_parser = reqparse.RequestParser()
 user_list_parser.add_argument('page', dest='page', type=int, location='args', default=1)
-user_parser = reqparse.RequestParser()
-user_parser.add_argument('id', dest='userid', type=int, required=True, help='The user\'s username')
-user_parser.add_argument('page', type=int, help='page is required.')
 
 
 user_fields = {
@@ -55,18 +51,6 @@ class UserListApi(Resource):
                 'next': next_page,
                 'count': pagination.total
                 }
-        args = user_parser.parse_args()
-        page = args.get('page', 1, type=int)
-        pagination = User.query.paginate(page, per_page=current_app.config['FLASK_API_USER_PER_PAGE'], error_out=False)
-        users = pagination.items
-        prev_page = None
-        if pagination.has_prev:
-            prev_page = url_for('api.get_users', page=page - 1, _external=True)
-        next_page = None
-        if pagination.has_next:
-           next_page = url_for('api.get_users', page=page + 1, _external=True)
-        user_dict = [user.to_dict() for user in users]
-        return user_dict
 
 
 class UserInfoApi(Resource):
