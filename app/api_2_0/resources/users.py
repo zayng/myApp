@@ -15,9 +15,12 @@ user_list_parser.add_argument('page', dest='page', type=int, location='args', de
 
 user_build_parser = user_list_parser.copy()
 user_build_parser.remove_argument('page')
-user_build_parser.add_argument('username', dest='username', type=str, required=True, location='json', help='用户名称必输.')
-user_build_parser.add_argument('email', dest='email', type=str, required=True, location='json', help='邮箱必输.')
-user_build_parser.add_argument('password', dest='password', type=str, required=True, location='json', help='密码必填.')
+user_build_parser.add_argument('username', dest='username', type=str, required=True, location='json',
+                               help='用户名称必输.', trim=True, nullable=False)
+user_build_parser.add_argument('email', dest='email', type=str, required=True, location='json',
+                               help='邮箱必输.', trim=True, nullable=False)
+user_build_parser.add_argument('password', dest='password', type=str, required=True, location='json',
+                               help='密码必填.', trim=True, nullable=False)
 
 
 user_fields = {
@@ -61,6 +64,12 @@ class UserListApi(Resource):
 
     def post(self):
         args = user_build_parser.parse_args(strict=True)
+        validate_user = User.query.filter_by(username=args.username).first()
+        if validate_user:
+            return {"message": "用户名已注册."}
+        validate_email = User.query.filter_by(email=args.email).first()
+        if validate_email:
+            return {"message": "邮箱已注册."}
         user = User(username=args['username'], email=args['email'], password=args['password'])
         db.session.add(user)
         db.session.commit()
