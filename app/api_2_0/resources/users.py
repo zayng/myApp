@@ -5,23 +5,30 @@ Created on 2016/8/10
 @author: wb-zy184129
 """
 
-from flask_restful import fields, marshal_with, reqparse, Resource, url_for, current_app
+from flask_restful import fields, marshal,marshal_with, reqparse, Resource, url_for, current_app
 from ...models import User
+from ... import db
 
 
 user_list_parser = reqparse.RequestParser()
 user_list_parser.add_argument('page', dest='page', type=int, location='args', default=1)
 
+user_build_parser = user_list_parser.copy()
+user_build_parser.remove_argument('page')
+user_build_parser.add_argument('username', dest='username', type=str, required=True, location='json', help='用户名称必输.')
+user_build_parser.add_argument('email', dest='email', type=str, required=True, location='json', help='邮箱必输.')
+user_build_parser.add_argument('password', dest='password', type=str, required=True, location='json', help='密码必填.')
+
 
 user_fields = {
     'url': fields.String,
     'username': fields.String,
+    'email': fields.String(default=None),
     'member_since': fields.String,
     'last_seen': fields.String,
     # 'posts': fields.String,
     # 'followed_posts': fields.String,
     'post_count': fields.Integer,
-    'email': fields.String
 }
 
 user_page_fields = {
@@ -52,6 +59,13 @@ class UserListApi(Resource):
                 'count': pagination.total
                 }
 
+    def post(self):
+        args = user_build_parser.parse_args(strict=True)
+        user = User(username=args['username'], email=args['email'], password=args['password'])
+        db.session.add(user)
+        db.session.commit()
+        return {'message': 'success', 'data': marshal(user.to_dict(), user_fields)}
+
 
 class UserInfoApi(Resource):
 
@@ -60,3 +74,6 @@ class UserInfoApi(Resource):
         user = User.query.get_or_404(userid)
         user_info = user.to_dict()
         return user_info
+
+
+

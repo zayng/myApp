@@ -356,7 +356,6 @@ class User(UserMixin, db.Model):
             except IntegrityError:
                 db.session.rollback()
 
-
     @staticmethod
     def add_self_follows():
         for user in User.query.all():
@@ -401,11 +400,11 @@ class User(UserMixin, db.Model):
         }
         return json_user
 
-
     def to_dict(self):
         user_dict = {
             'url': url_for('api_bp.get_user_info', userid=self.id, _external=True),
             'username': self.username,
+            'email': self.email,
             'member_since': self.member_since,
             'last_seen': self.last_seen,
             # 'posts': url_for('api.get_user_posts', userid=self.id, _external=True),
