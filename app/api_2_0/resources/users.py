@@ -14,9 +14,9 @@ def validation_null(value, name):
     if value == "":
         raise ValueError("{} cannot be empty".format(name, value))
     else:
-        validate_user = User.query.filter_by(value).first()
-        if validate_user:
-            raise ValueError("{}:{},已注册".format(name,value))
+        is_user = User.query.filter_by(value).first()
+        if is_user:
+            raise ValueError("{}:{},已注册".format(name, value))
     return value
 
 
@@ -28,9 +28,9 @@ user_build_parser.remove_argument('page')
 user_build_parser.add_argument('username', dest='username', type=validation_null, required=True, location='json',
                                trim=True, nullable=False)
 user_build_parser.add_argument('email', dest='email', type=validation_null, required=True, location='json',
-                               help='邮箱必输.', trim=True, nullable=False)
+                               trim=True, nullable=False)
 user_build_parser.add_argument('password', dest='password', type=validation_null, required=True, location='json',
-                               help='密码必填', trim=True, nullable=False)
+                                trim=True, nullable=False)
 
 
 user_fields = {
