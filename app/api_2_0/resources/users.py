@@ -4,7 +4,6 @@ Created on 2016/8/10
 
 @author: wb-zy184129
 """
-import random
 from flask_restful import fields, marshal, marshal_with, reqparse, Resource, url_for, current_app
 from ...models import User
 from ... import db

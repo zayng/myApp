@@ -69,6 +69,18 @@ class Post(db.Model):
         }
         return json_post
 
+    def to_dict(self):
+        json_post = {
+            'url': url_for('api_bp.get_post', postid=self.id, _external=True),
+            'body': self.body,
+            'body_html': self.body_html,
+            'timestamp': self.timestamp,
+            'author': url_for('api_bp.get_user', userid=self.author_id, _external=True),
+            'comments': url_for('api_bp.get_post_comments', postid=self.id, _external=True),
+            'comment_count': self.comments.count()
+        }
+        return json_post
+
     @staticmethod
     def from_json(json_post):
         body = json_post.get('body')
@@ -402,7 +414,7 @@ class User(UserMixin, db.Model):
 
     def to_dict(self):
         user_dict = {
-            'url': url_for('api_bp.get_user_info', userid=self.id, _external=True),
+            'url': url_for('api_bp.get_user', userid=self.id, _external=True),
             'username': self.username,
             'email': self.email,
             'member_since': self.member_since,

@@ -10,10 +10,13 @@ from . import api_bp
 from .. import hp_auth
 from ..models import User, AnonymousUser
 from .common.errors import unauthorized, forbidden
+from .resources.token import Token
 
 from .resources.task import TaskAPI, TaskListAPI
 from .resources.users import UserListApi, UserInfoApi
-from .resources.token import Token
+from .resources.posts import PostsListApi, PostInfoApi
+from .resources.comments import CommentsListApi, CommentInfoApi
+
 
 
 build_api = Api(api_bp)
@@ -52,8 +55,14 @@ def before_request():
 build_api.add_resource(Token, '/token', endpoint='get_token')
 build_api.add_resource(TaskListAPI, '/todo/tasks', endpoint='tasks')
 build_api.add_resource(TaskAPI, '/todo/tasks/<int:id>', endpoint='task')
+
+
 build_api.add_resource(UserListApi, '/users/', endpoint='get_user_list')
-build_api.add_resource(UserInfoApi, '/users/<int:userid>', endpoint='get_user_info')
+build_api.add_resource(UserInfoApi, '/users/<int:userid>', endpoint='get_user')
 
+build_api.add_resource(PostsListApi, '/posts/', endpoint='get_posts_list')
+build_api.add_resource(PostInfoApi, '/posts/<int:postsid>', endpoint='get_post')
 
-
+build_api.add_resource(CommentsListApi, '/comments/', endpoint='get_comments_list')
+build_api.add_resource(CommentsListApi, '/comments/<int:commentsid>', endpoint='get_comment')
+build_api.add_resource(CommentInfoApi, '/posts/<int:postsid>/comments', endpoint='get_post_comments')
