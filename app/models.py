@@ -419,8 +419,8 @@ class User(UserMixin, db.Model):
             'email': self.email,
             'member_since': self.member_since,
             'last_seen': self.last_seen,
-            # 'posts': url_for('api.get_user_posts', userid=self.id, _external=True),
-            # 'followed_posts': url_for('api.get_user_followed_posts', userid=self.id, _external=True),
+            'posts': url_for('api.get_user_posts', userid=self.id, _external=True),
+            'followed_posts': url_for('api.get_user_followed_posts', userid=self.id, _external=True),
             'post_count': self.posts.count()
         }
         return user_dict
@@ -469,6 +469,16 @@ class Comment(db.Model):
             'body_html': self.body_html,
             'timestamp': self.timestamp,
             'author': url_for('api.get_user', userid=self.author_id, _external=True)
+        }
+        return json_post
+
+    def to_dict(self):
+        json_post = {
+            'url': url_for('api_bp.get_comment', commentid=self.id, _external=True),
+            'body': self.body,
+            'body_html': self.body_html,
+            'timestamp': self.timestamp,
+            'author': url_for('api_bp.get_user', userid=self.author_id, _external=True)
         }
         return json_post
 

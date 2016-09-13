@@ -68,7 +68,7 @@ def get_user_followed_posts(userid):
         prev_page = url_for('api.get_user_followed_posts', userid=userid, page=page-1, _external=True)
     next_page = None
     if pagination.has_next:
-        next_page = url_for('api.get_posts', userid=userid, page=page+1, _external=True)
+        next_page = url_for('api.get_user_followed_posts', userid=userid, page=page+1, _external=True)
     return jsonify({
         'posts': [post.to_json() for post in posts],
         'prev': prev_page,

@@ -51,7 +51,7 @@ def get_post_comments(postid):
     if pagination.has_next:
         next_page = url_for('api.get_post_comments', postid=postid, page=page + 1, _external=True)
     return jsonify({
-        'posts': [comment.to_json() for comment in comments],
+        'comments': [comment.to_json() for comment in comments],
         'prev': prev_page,
         'next': next_page,
         'count': pagination.total

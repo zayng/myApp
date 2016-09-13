@@ -14,8 +14,8 @@ from .resources.token import Token
 
 from .resources.task import TaskAPI, TaskListAPI
 from .resources.users import UserListApi, UserInfoApi
-from .resources.posts import PostsListApi, PostInfoApi
-from .resources.comments import CommentsListApi, CommentInfoApi
+from .resources.posts import PostListApi, PostInfoApi, UserPostsApi
+from .resources.comments import CommentListApi, CommentInfoApi, PostCommentsApi
 
 
 
@@ -59,10 +59,14 @@ build_api.add_resource(TaskAPI, '/todo/tasks/<int:id>', endpoint='task')
 
 build_api.add_resource(UserListApi, '/users/', endpoint='get_user_list')
 build_api.add_resource(UserInfoApi, '/users/<int:userid>', endpoint='get_user')
+build_api.add_resource(UserPostsApi, '/users/<int:userid>/posts/', endpoint='get_user_posts')
+build_api.add_resource(UserPostsApi, '/users/<int:userid>/timeline/', endpoint='get_user_followed_posts')
 
-build_api.add_resource(PostsListApi, '/posts/', endpoint='get_posts_list')
-build_api.add_resource(PostInfoApi, '/posts/<int:postsid>', endpoint='get_post')
 
-build_api.add_resource(CommentsListApi, '/comments/', endpoint='get_comments_list')
-build_api.add_resource(CommentsListApi, '/comments/<int:commentsid>', endpoint='get_comment')
-build_api.add_resource(CommentInfoApi, '/posts/<int:postsid>/comments', endpoint='get_post_comments')
+build_api.add_resource(PostListApi, '/posts/', endpoint='get_post_list')
+build_api.add_resource(PostInfoApi, '/posts/<int:postid>', endpoint='get_post')
+
+build_api.add_resource(CommentListApi, '/comments/', endpoint='get_comment_list')
+build_api.add_resource(CommentInfoApi, '/comments/<int:commentid>', endpoint='get_comment')
+
+build_api.add_resource(PostCommentsApi, '/posts/<int:postid>/comments/', endpoint='get_post_comments')
