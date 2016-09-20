@@ -78,7 +78,7 @@ class UserListApi(Resource):
         user = User(username=args['username'], email=args['email'], password=args['password'])
         db.session.add(user)
         db.session.commit()
-        return user.to_dict()
+        return {'message': 'success', 'data': user.to_dict()}
 
 
 class UserInfoApi(Resource):

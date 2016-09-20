@@ -12,11 +12,10 @@ from ..models import User, AnonymousUser
 from .common.errors import unauthorized, forbidden
 from .resources.token import Token
 
-from .resources.task import TaskAPI, TaskListAPI
-from .resources.users import UserListApi, UserInfoApi
-from .resources.posts import PostListApi, PostInfoApi, UserPostsApi
-from .resources.comments import CommentListApi, CommentInfoApi, PostCommentsApi
 
+from .resources.users import UserListApi, UserInfoApi
+from .resources.posts import PostListApi, PostInfoApi, UserPostsApi, FollowedPostsApi
+from .resources.comments import CommentListApi, CommentInfoApi, PostCommentsApi
 
 
 build_api = Api(api_bp)
@@ -52,15 +51,10 @@ def before_request():
         return forbidden('Unconfirmed account')
 
 
-build_api.add_resource(Token, '/token', endpoint='get_token')
-build_api.add_resource(TaskListAPI, '/todo/tasks', endpoint='tasks')
-build_api.add_resource(TaskAPI, '/todo/tasks/<int:id>', endpoint='task')
-
-
 build_api.add_resource(UserListApi, '/users/', endpoint='get_user_list')
 build_api.add_resource(UserInfoApi, '/users/<int:userid>', endpoint='get_user')
 build_api.add_resource(UserPostsApi, '/users/<int:userid>/posts/', endpoint='get_user_posts')
-build_api.add_resource(UserPostsApi, '/users/<int:userid>/timeline/', endpoint='get_user_followed_posts')
+build_api.add_resource(FollowedPostsApi, '/users/<int:userid>/timeline/', endpoint='get_user_followed_posts')
 
 
 build_api.add_resource(PostListApi, '/posts/', endpoint='get_post_list')
