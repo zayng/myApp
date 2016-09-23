@@ -247,3 +247,14 @@ def delete_comment(comment_id):
     db.session.commit()
     flash('该条评论已删除.')
     return redirect(url_for('.post', post_id=post_id))
+
+
+@main.route("/shutdown")
+def server_shutdown():
+    if not current_app.testing:
+        abort(404)
+    shutdown = request.environ.get('werkzeug.server.shutdown')
+    if not shutdown:
+        abort(500)
+    shutdown()
+    return 'Shutting down'
