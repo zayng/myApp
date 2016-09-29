@@ -9,4 +9,6 @@ RUN pip install -r /tmp/requirements.txt 
 
 # Assuming you're in the directory
 
+EXPOSE 80 443 5000
+
 COPY . /app
