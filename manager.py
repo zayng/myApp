@@ -23,6 +23,24 @@ manager.add_command("shell", Shell(make_context=make_shell_context))
 manager.add_command('db', MigrateCommand)
 
 
+@manager.command
+def deploy():
+    """
+    Run deployment tasks.
+    :return: Nonr
+    """
+    from flask_migrate import upgrade
+    from app.models import Role, User
+
+    upgrade()
+
+    # 创建用户角色
+    Role.insert_roles()
+
+    # 让所有用户都关注
+    User.add_self_follows()
+
+
 COV = None
 if os.environ.get('FLASK_COVERAGE'):
     import coverage
