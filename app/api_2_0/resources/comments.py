@@ -6,7 +6,6 @@ Created on 2016/8/10
 """
 from flask_restful import fields, marshal, marshal_with, reqparse, Resource, url_for, current_app
 from ...models import Post, Comment
-from ... import db
 
 from ..common.utils import query_page
 

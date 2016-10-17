@@ -6,7 +6,7 @@ Created on 2016/6/1
 """
 from threading import Thread
 from flask import current_app, render_template
-from flask.ext.mail import Message
+from flask_mail import Message as Message
 from . import create_app, mail
 
 

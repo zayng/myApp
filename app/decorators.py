@@ -6,7 +6,7 @@ Created on '2016/6/19'
 """
 from functools import wraps
 from flask import abort
-from flask.ext.login import current_user
+from flask_login import current_user as current_user
 from .models import Permission
 
 

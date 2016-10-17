@@ -6,7 +6,7 @@ Created on '2016/5/29'
 """
 from flask import render_template, request, current_app, abort
 from flask import flash, redirect, url_for, make_response
-from flask.ext.login import login_required, current_user
+from flask_login import login_required, current_user
 
 from . import main
 from ..models import User, Role, Post, Permission, Comment

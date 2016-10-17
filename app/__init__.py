@@ -5,14 +5,14 @@ Created on '2016/5/29'
 @author: 'susce'
 """
 from flask import Flask
-from flask.ext.bootstrap import Bootstrap
-from flask.ext.mail import Mail
-from flask.ext.moment import Moment
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.login import LoginManager
+from flask_bootstrap import Bootstrap as Bootstrap
+from flask_mail import Mail as Mail
+from flask_moment import Moment as Moment
+from flask_sqlalchemy import SQLAlchemy as SQLAlchemy
+from flask_login import LoginManager as LoginManager
 from config import config
-from flask.ext.pagedown import PageDown
-from flask.ext.httpauth import HTTPBasicAuth
+from flask_pagedown import PageDown as PageDown
+from flask_httpauth import HTTPBasicAuth as HTTPBasicAuth
 
 
 bootstrap = Bootstrap()

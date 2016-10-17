@@ -10,8 +10,6 @@ from . import api_bp
 from .. import hp_auth
 from ..models import User, AnonymousUser
 from .common.errors import unauthorized, forbidden
-from .resources.token import Token
-
 
 from .resources.users import UserListApi, UserInfoApi
 from .resources.posts import PostListApi, PostInfoApi, UserPostsApi, FollowedPostsApi

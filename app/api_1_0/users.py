@@ -6,8 +6,7 @@ Created on 2016/7/31
 """
 from flask import url_for, request, jsonify, g, current_app
 from . import api
-from ..models import User, Post, Permission
-from .decorators import permission_required
+from ..models import User, Post
 
 
 @api.route('/users/')

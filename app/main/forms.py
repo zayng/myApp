@@ -4,7 +4,7 @@ Created on '2016/5/29'
 
 @author: 'susce'
 """
-from flask.ext.wtf import Form
+from flask_wtf import Form
 from wtforms import StringField, TextAreaField, BooleanField, SubmitField, SelectField
 from flask.ext.pagedown.fields import PageDownField
 from wtforms.validators import DataRequired, Length, Regexp, ValidationError
