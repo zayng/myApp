@@ -15,6 +15,7 @@ from ..email import send_mail
 from flask.ext.login import current_user
 
 
+
 @auth.before_app_request
 def before_request():
     if current_user.is_authenticated:
