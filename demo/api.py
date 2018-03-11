@@ -7,10 +7,8 @@ Created on 2016/8/7
 from flask import Flask, request
 from flask_restful import Resource, Api, abort, reqparse
 
-
 app = Flask(__name__)
 api = Api(app)
-
 
 TODOS = {
     'todo1': {'task': 'build an API'},
@@ -59,7 +57,6 @@ class TodoList(Resource):
 
 api.add_resource(TodoList, '/todos')
 api.add_resource(Todo, '/todos/<todo_id>')
-
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -48,5 +48,3 @@ def get_token():
         return unauthorized('Invalid credentials')
     token = g.current_user.generate_auth_token(expiration=3600)
     return jsonify({'token': token, 'expiration': 3600})
-
-

@@ -9,10 +9,8 @@ from ...models import Post, Comment
 
 from ..common.utils import query_page
 
-
 comments_list_parser = reqparse.RequestParser()
 comments_list_parser.add_argument('page', dest='page', type=int, location='args', default=1)
-
 
 comment_fields = {
     'url': fields.String,
@@ -62,7 +60,7 @@ class PostCommentsApi(Resource):
         post = Post.query.get_or_404(postid)
         if post.comments.count() == 0:
             return {'message': 'No comments', 'count': 0}
-        pagination = post.comments.order_by(Comment.timestamp.asc()).\
+        pagination = post.comments.order_by(Comment.timestamp.asc()). \
             paginate(page, per_page=current_app.config['FLASK_API_COMMENTS_PER_PAGE'], error_out=False)
         pagination_fields = query_page(pagination, 'api_bp.get_post_comments', page, envelope='comments', postid=postid)
         return pagination_fields

@@ -25,10 +25,10 @@ def get_posts():
     posts = pagination.items
     prev_page = None
     if pagination.has_prev:
-        prev_page = url_for('api.get_posts', page=page-1, _external=True)
+        prev_page = url_for('api.get_posts', page=page - 1, _external=True)
     next_page = None
     if pagination.has_next:
-        next_page = url_for('api.get_posts', page=page+1, _external=True)
+        next_page = url_for('api.get_posts', page=page + 1, _external=True)
     return jsonify({
         'posts': [post.to_json() for post in posts],
         'prev': prev_page,
@@ -56,5 +56,3 @@ def edit_post(postid):
     post.body = request.json.get('body', post.body)
     db.session.add(post)
     return jsonify(post.to_json())
-
-

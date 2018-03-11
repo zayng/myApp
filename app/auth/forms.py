@@ -27,9 +27,9 @@ class LoginUsernameForm(Form):
 
 class RegistrationForm(Form):
     username = StringField('用户名', validators=[DataRequired(), Length(1, 64),
-                                                Regexp('^[A-za-z][A-Za-z0-9_-]*$', 0,
-                                                       'Username must have only letters,'
-                                                       'numbers, dots or underscores')])
+                                              Regexp('^[A-za-z][A-Za-z0-9_-]*$', 0,
+                                                     'Username must have only letters,'
+                                                     'numbers, dots or underscores')])
     email = StringField('邮箱', validators=[DataRequired(), Length(1, 64), Email()])
     password = PasswordField('密码',
                              validators=[DataRequired(), EqualTo('password2', message='Passwords must match.')])
@@ -66,9 +66,9 @@ class ResetPasswordForm(Form):
 
 class NewRegistrationForm(Form):
     username = StringField('用户名', validators=[DataRequired(), Length(1, 64),
-                                                Regexp('^[A-za-z][A-Za-z0-9_-]*$', 0,
-                                                       'Username must have only letters,'
-                                                       'numbers, dots or underscores')])
+                                              Regexp('^[A-za-z][A-Za-z0-9_-]*$', 0,
+                                                     'Username must have only letters,'
+                                                     'numbers, dots or underscores')])
     email = StringField('邮箱', validators=[DataRequired(), Length(1, 64), Email()])
     password = PasswordField('密码',
                              validators=[DataRequired(), EqualTo('password2', message='Passwords must match.')])

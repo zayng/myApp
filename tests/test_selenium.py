@@ -19,7 +19,6 @@ class SeleniumTestCase(unittest.TestCase):
     client = None
     base_url = "http://127.0.0.1:5000/"
 
-
     @classmethod
     def setUpClass(cls):
         chromedriver_dir = os.path.abspath('./driver/chromedriver.exe')
@@ -33,7 +32,6 @@ class SeleniumTestCase(unittest.TestCase):
             import logging
             logger = logging.getLogger('werkzeug')
             logger.setLevel("ERROR")
-
 
             db.create_all()
             Role.insert_roles()
@@ -69,13 +67,11 @@ class SeleniumTestCase(unittest.TestCase):
     def tearDown(self):
         pass
 
-
     def test_email_login(self):
         self.open()
         self.by_id("email").send_keys("admin@a.com")
         self.by_id("password").send_keys("123")
         self.by_id("submit").click()
-
 
     def open(self, uri="auth/login"):
         self.client.get(self.base_url + uri)
@@ -99,6 +95,7 @@ class SeleniumTestCase(unittest.TestCase):
 
     def sleep(self, s=3):
         return time.sleep(s)
+
 
 if __name__ == '__main__':
     unittest.main()

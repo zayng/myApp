@@ -37,7 +37,6 @@ user_build_parser.add_argument('email', dest='email', type=validation_null, requ
 user_build_parser.add_argument('password', dest='password', type=validation_null, required=True, location='json',
                                trim=True, nullable=False)
 
-
 user_fields = {
     'url': fields.String,
     'username': fields.String,
@@ -88,5 +87,3 @@ class UserInfoApi(Resource):
         user = User.query.get_or_404(userid)
         user_info = user.to_dict()
         return user_info
-
-

@@ -12,12 +12,12 @@
 {#{% endmacro %}#}
 
 {% macro render_field(field) %}
-<div class="form-group">
-    {% if field.type == 'SubmitField' %}
-    {{ field(**kwargs)|safe }}
-    {% else %}
-    {{ field.label }}
-    {{ field(class="form-control", **kwargs)|safe }}
-    {% endif %}
-</div>
+    <div class="form-group">
+        {% if field.type == 'SubmitField' %}
+            {{ field(**kwargs)|safe }}
+        {% else %}
+            {{ field.label }}
+            {{ field(class="form-control", **kwargs)|safe }}
+        {% endif %}
+    </div>
 {% endmacro %}

@@ -15,7 +15,6 @@ from .resources.users import UserListApi, UserInfoApi
 from .resources.posts import PostListApi, PostInfoApi, UserPostsApi, FollowedPostsApi
 from .resources.comments import CommentListApi, CommentInfoApi, PostCommentsApi
 
-
 build_api = Api(api_bp)
 
 
@@ -53,7 +52,6 @@ build_api.add_resource(UserListApi, '/users/', endpoint='get_user_list')
 build_api.add_resource(UserInfoApi, '/users/<int:userid>', endpoint='get_user')
 build_api.add_resource(UserPostsApi, '/users/<int:userid>/posts/', endpoint='get_user_posts')
 build_api.add_resource(FollowedPostsApi, '/users/<int:userid>/timeline/', endpoint='get_user_followed_posts')
-
 
 build_api.add_resource(PostListApi, '/posts/', endpoint='get_post_list')
 build_api.add_resource(PostInfoApi, '/posts/<int:postid>', endpoint='get_post')

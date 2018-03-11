@@ -16,9 +16,9 @@ class TodoItem(Resource):
     def get(self, id):
         return {'task': 'Say "Hello, World!"'}
 
+
 api.add_resource(TodoItem, '/todos/<int:id>')
 app.register_blueprint(api_bp)
-
 
 if __name__ == "__main__":
     # manage.run()

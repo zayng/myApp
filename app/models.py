@@ -300,7 +300,6 @@ class User(UserMixin, db.Model):
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
         return s.dumps({'reset': self.id})
 
-
     def generate_auth_token(self, expiration=3600):
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
         return s.dumps({'id': self.id}).decode('ascii')
@@ -325,7 +324,6 @@ class User(UserMixin, db.Model):
         self.password = new_password
         db.session.add(self)
         return True
-
 
     # gravatar请求响应缓慢，注释该头像服务。
     def gravatar(self, size=100, default='identicon', rating='g'):
@@ -488,5 +486,6 @@ class Comment(db.Model):
         if body is None or body == '':
             raise ValidationError('comment does not have a body')
         return Comment(body=body)
+
 
 db.event.listen(Comment.body, 'set', Comment.on_changed_body)

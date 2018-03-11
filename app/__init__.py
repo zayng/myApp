@@ -14,7 +14,6 @@ from config import config
 from flask_pagedown import PageDown as PageDown
 from flask_httpauth import HTTPBasicAuth as HTTPBasicAuth
 
-
 bootstrap = Bootstrap()
 mail = Mail()
 moment = Moment()

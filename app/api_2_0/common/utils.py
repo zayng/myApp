@@ -27,4 +27,3 @@ def query_page(pagination, endpoint_name, page, envelope, **kwargs):
             'next': next_page,
             'count': pagination.total
             }
-

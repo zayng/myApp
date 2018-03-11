@@ -13,7 +13,6 @@ from ..common.utils import query_page
 posts_list_parser = reqparse.RequestParser()
 posts_list_parser.add_argument('page', dest='page', type=int, location='args', default=1)
 
-
 post_fields = {
     'url': fields.String,
     'body': fields.String,
@@ -62,7 +61,7 @@ class UserPostsApi(Resource):
         args = posts_list_parser.parse_args()
         page = args.get('page')
         user = User.query.get_or_404(userid)
-        pagination = user.posts.oder_by(Post.timestamp.desc())\
+        pagination = user.posts.oder_by(Post.timestamp.desc()) \
             .paginate(page, per_page=current_app.config['FLASK_API_POSTS_PER_PAGE'], error_out=False)
         pagination_fields = query_page(pagination, 'api_bp.get_user_posts', page, envelope='posts')
         return pagination_fields
@@ -75,7 +74,7 @@ class FollowedPostsApi(Resource):
         args = posts_list_parser.parse_args()
         page = args.get('page')
         user = User.query.get_or_404(userid)
-        pagination = user.followed_posts.oder_by(Post.timestamp.desc())\
+        pagination = user.followed_posts.oder_by(Post.timestamp.desc()) \
             .paginate(page, per_page=current_app.config['FLASK_API_POSTS_PER_PAGE'], error_out=False)
         pagination_fields = query_page(pagination, 'api_bp.get_user_followed_posts', page, envelope='posts')
         return pagination_fields

@@ -16,10 +16,10 @@ def get_users():
     users = pagination.items
     prev_page = None
     if pagination.has_prev:
-        prev_page = url_for('api.get_users', page=page-1, _external=True)
+        prev_page = url_for('api.get_users', page=page - 1, _external=True)
     next_page = None
     if pagination.has_next:
-        next_page = url_for('api.get_users', page=page+1, _external=True)
+        next_page = url_for('api.get_users', page=page + 1, _external=True)
     return jsonify({
         'users': [user.to_json() for user in users],
         'prev': prev_page,
@@ -43,10 +43,10 @@ def get_user_posts(userid):
     posts = pagination.items
     prev_page = None
     if pagination.has_prev:
-        prev_page = url_for('api.get_user_posts', userid=userid, page=page-1, _external=True)
+        prev_page = url_for('api.get_user_posts', userid=userid, page=page - 1, _external=True)
     next_page = None
     if pagination.has_next:
-        next_page = url_for('api.get_user_posts', userid=userid, page=page+1, _external=True)
+        next_page = url_for('api.get_user_posts', userid=userid, page=page + 1, _external=True)
     return jsonify({
         'posts': [post.to_json() for post in posts],
         'prev': prev_page,
@@ -64,15 +64,13 @@ def get_user_followed_posts(userid):
     posts = pagination.items
     prev_page = None
     if pagination.has_prev:
-        prev_page = url_for('api.get_user_followed_posts', userid=userid, page=page-1, _external=True)
+        prev_page = url_for('api.get_user_followed_posts', userid=userid, page=page - 1, _external=True)
     next_page = None
     if pagination.has_next:
-        next_page = url_for('api.get_user_followed_posts', userid=userid, page=page+1, _external=True)
+        next_page = url_for('api.get_user_followed_posts', userid=userid, page=page + 1, _external=True)
     return jsonify({
         'posts': [post.to_json() for post in posts],
         'prev': prev_page,
         'next': next_page,
         'count': pagination.total
     })
-
-
